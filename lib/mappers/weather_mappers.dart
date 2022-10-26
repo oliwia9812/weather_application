@@ -6,39 +6,41 @@ import 'package:weather/rest_models/current_weather.dart';
 import 'package:weather/rest_models/daily_weather.dart';
 import 'package:weather/rest_models/hourly_weather.dart';
 import 'package:weather/rest_models/location.dart';
+import 'package:intl/intl.dart';
 
-extension LocationMapper on Location {
+extension LocationMapper on SearchLocation {
   LocationModel mapToLocationModel() => LocationModel(
-        id: id,
-        name: name,
-        lon: lon,
-        lat: lat,
+        id: locations![0].id,
+        name: locations![0].name,
+        lon: locations![0].lon,
+        lat: locations![0].lat,
       );
 }
 
 extension CurrentWeatherMapper on CurrentWeather {
   CurrentWeatherModel mapToCurrentWeatherModel() => CurrentWeatherModel(
-        feelsLikeTemp: feelsLikeTemp,
-        symbol: symbol,
-        symbolPhrase: symbolPhrase,
-        temperature: temperature,
-        time: DateTime.parse(time),
+        feelsLikeTemp: current?.feelsLikeTemp?.toInt(),
+        symbol: current?.symbol,
+        symbolPhrase: current?.symbolPhrase,
+        temperature: current?.temperature?.toInt(),
+        time: DateTime.parse(current!.time!),
       );
 }
 
-extension DailyWeatherMapper on DailyWeather {
-  DailyWeatherModel mapToDailyWeatherModel() => DailyWeatherModel(
-        date: DateTime.parse(date),
+extension DailyForecastMapper on ForecastDaily {
+  DailyForecastModel mapToDailyWeatherModel() => DailyForecastModel(
+        // date: DateTime.parse(date!),
+        date: DateFormat.E().format(DateTime.parse(date!)).toString(),
         symbol: symbol,
-        maxTemp: maxTemp,
-        minTemp: minTemp,
+        maxTemp: maxTemp?.toInt(),
+        minTemp: minTemp?.toInt(),
       );
 }
 
-extension HourlyWeatherMapper on HourlyWeather {
-  HourlyWeatherModel mapToHourlyWeatherModel() => HourlyWeatherModel(
+extension HourlyWeatherMapper on ForecastHourly {
+  HourlyForecastModel mapToHourlyWeatherModel() => HourlyForecastModel(
         symbol: symbol,
-        temperature: temperature,
-        time: DateTime.parse(time),
+        temperature: temperature?.toInt(),
+        time: DateTime.parse(time!).toLocal().hour,
       );
 }

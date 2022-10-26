@@ -6,16 +6,17 @@ part of 'hourly_weather_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-HourlyWeatherModel _$HourlyWeatherModelFromJson(Map<String, dynamic> json) =>
-    HourlyWeatherModel(
-      symbol: json['symbol'] as String,
-      temperature: json['temperature'] as int,
-      time: DateTime.parse(json['time'] as String),
+HourlyForecastModel _$HourlyForecastModelFromJson(Map<String, dynamic> json) =>
+    HourlyForecastModel(
+      symbol: json['symbol'] as String?,
+      temperature: json['temperature'] as int?,
+      time: json['time'] as int?,
     );
 
-Map<String, dynamic> _$HourlyWeatherModelToJson(HourlyWeatherModel instance) =>
+Map<String, dynamic> _$HourlyForecastModelToJson(
+        HourlyForecastModel instance) =>
     <String, dynamic>{
       'symbol': instance.symbol,
       'temperature': instance.temperature,
-      'time': instance.time.toIso8601String(),
+      'time': instance.time,
     };

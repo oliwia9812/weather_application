@@ -4,11 +4,11 @@ part 'current_weather_model.g.dart';
 
 @JsonSerializable()
 class CurrentWeatherModel {
-  final int feelsLikeTemp;
-  final String symbol;
-  final String symbolPhrase;
-  final int temperature;
-  final DateTime time;
+  int? feelsLikeTemp;
+  String? symbol;
+  String? symbolPhrase;
+  int? temperature;
+  DateTime? time;
 
   CurrentWeatherModel({
     required this.feelsLikeTemp,
@@ -17,4 +17,9 @@ class CurrentWeatherModel {
     required this.temperature,
     required this.time,
   });
+
+  factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) =>
+      _$CurrentWeatherModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CurrentWeatherModelToJson(this);
 }

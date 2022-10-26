@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:weather/constants.dart';
-import 'package:weather/repository/weather_repository.dart';
+import 'package:weather/repository/weather_repository_impl.dart';
 
 class Injector {
   static final GetIt _getIt = GetIt.instance;

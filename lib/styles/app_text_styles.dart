@@ -32,9 +32,15 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  static const TextStyle cardTitleTemp = TextStyle(
+  static const TextStyle cardTitleMaxTemp = TextStyle(
     color: AppColors.white,
-    fontSize: 16.0,
-    fontWeight: FontWeight.w500,
+    fontSize: 15.0,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle cardTitleMinTemp = TextStyle(
+    color: AppColors.secondary,
+    fontSize: 15.0,
+    fontWeight: FontWeight.w400,
   );
 }

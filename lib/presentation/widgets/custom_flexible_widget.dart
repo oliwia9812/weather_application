@@ -4,13 +4,15 @@ import 'package:weather/styles/app_text_styles.dart';
 
 class CustomFlexibleWidget extends StatelessWidget {
   final String icon;
-  final String temp;
+  final String maxTemp;
+  final String? minTemp;
   final String time;
   final double verticalPadding;
 
   const CustomFlexibleWidget({
     required this.icon,
-    required this.temp,
+    required this.maxTemp,
+    this.minTemp,
     required this.time,
     required this.verticalPadding,
     super.key,
@@ -45,9 +47,23 @@ class CustomFlexibleWidget extends StatelessWidget {
               const SizedBox(
                 height: 12.0,
               ),
-              Text(
-                temp,
-                style: AppTextStyles.cardTitleTemp,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    maxTemp,
+                    style: AppTextStyles.cardTitleMaxTemp,
+                  ),
+                  if (minTemp != null) ...[
+                    const SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      minTemp!,
+                      style: AppTextStyles.cardTitleMinTemp,
+                    ),
+                  ]
+                ],
               ),
             ],
           ),

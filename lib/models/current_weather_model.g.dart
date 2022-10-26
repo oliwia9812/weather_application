@@ -8,11 +8,12 @@ part of 'current_weather_model.dart';
 
 CurrentWeatherModel _$CurrentWeatherModelFromJson(Map<String, dynamic> json) =>
     CurrentWeatherModel(
-      feelsLikeTemp: json['feelsLikeTemp'] as int,
-      symbol: json['symbol'] as String,
-      symbolPhrase: json['symbolPhrase'] as String,
-      temperature: json['temperature'] as int,
-      time: DateTime.parse(json['time'] as String),
+      feelsLikeTemp: json['feelsLikeTemp'] as int?,
+      symbol: json['symbol'] as String?,
+      symbolPhrase: json['symbolPhrase'] as String?,
+      temperature: json['temperature'] as int?,
+      time:
+          json['time'] == null ? null : DateTime.parse(json['time'] as String),
     );
 
 Map<String, dynamic> _$CurrentWeatherModelToJson(
@@ -22,5 +23,5 @@ Map<String, dynamic> _$CurrentWeatherModelToJson(
       'symbol': instance.symbol,
       'symbolPhrase': instance.symbolPhrase,
       'temperature': instance.temperature,
-      'time': instance.time.toIso8601String(),
+      'time': instance.time?.toIso8601String(),
     };

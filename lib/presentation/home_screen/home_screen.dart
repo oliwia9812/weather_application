@@ -1,66 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather/bloc/bloc/weather_bloc.dart';
+import 'package:weather/models/current_weather_model.dart';
+import 'package:weather/models/daily_weather_model.dart';
+import 'package:weather/models/hourly_weather_model.dart';
+import 'package:weather/models/weather_model.dart';
 import 'package:weather/presentation/home_screen/widgets/custom_toggle_buttons.dart';
+import 'package:weather/presentation/search_screen/search_screen.dart';
 import 'package:weather/presentation/widgets/custom_button.dart';
 import 'package:weather/presentation/widgets/custom_flexible_widget.dart';
 import 'package:weather/styles/app_colors.dart';
 import 'package:weather/styles/app_text_styles.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<WeatherBloc>(context).add(GetWeatherByCurrentLocation());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 64.0),
-        child: Column(
-          children: [
-            _getHeader(),
-            _getCurrentWeather(),
-            _getHourlyWeather(),
-            _getWeeklyWeather(),
-          ],
-        ),
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: SafeArea(
+            minimum:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 64.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (state is WeatherLoading) _buildLoading(),
+                if (state is WeatherLoaded) ...[
+                  _getHeader(context, state.weatherModel),
+                  _getCurrentWeather(state.weatherModel),
+                  _getHourlyWeather(state.weatherModel),
+                  _getWeeklyWeather(state.weatherModel),
+                ]
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLoading() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: AppColors.primary,
       ),
     );
   }
 
-  Widget _getHeader() {
+  Widget _getHeader(BuildContext context, WeatherModel weatherModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          "London",
+        Text(
+          weatherModel.cityName ?? '-',
           style: AppTextStyles.titleLarge,
         ),
         CustomButton(
-          callback: () => print('Show menu'),
+          callback: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: ((context) => const SearchScreen()),
+              ),
+            );
+          },
           icon: Icons.menu_rounded,
         ),
       ],
     );
   }
 
-  Widget _getCurrentWeather() {
+  Widget _getCurrentWeather(WeatherModel weatherModel) {
+    final CurrentWeatherModel currentWeather =
+        weatherModel.currentWeatherModel!;
     return Padding(
-      padding: const EdgeInsets.only(top: 56.0, bottom: 56.0),
+      padding: const EdgeInsets.only(top: 46.0, bottom: 46.0),
       child: Column(
         children: [
           Image.network(
-            'https://developer.foreca.com/static/images/symbols/d000.png',
+            'https://developer.foreca.com/static/images/symbols/${currentWeather.symbol}.png',
             width: 104.0,
           ),
           const SizedBox(
-            height: 16.0,
+            height: 24.0,
           ),
-          const Text(
-            '12°',
+          Text(
+            '${currentWeather.temperature!}°',
             style: AppTextStyles.titleXLarge,
           ),
-          const Text(
-            'Partly cloud | feels like 9°C',
+          const SizedBox(
+            height: 8.0,
+          ),
+          Text(
+            '${currentWeather.symbolPhrase} | feels like ${currentWeather.feelsLikeTemp}°',
             style: AppTextStyles.subtitle,
           ),
         ],
@@ -68,20 +114,25 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _getHourlyWeather() {
+  Widget _getHourlyWeather(WeatherModel weatherModel) {
+    final List<HourlyForecastModel> hourlyWeather =
+        weatherModel.hourlyForecastModel!;
     return Row(
       children: List.generate(5, (index) {
-        return const CustomFlexibleWidget(
-          icon: 'https://developer.foreca.com/static/images/symbols/d100.png',
-          temp: '4°',
-          time: '12',
-          verticalPadding: 16.0,
+        return CustomFlexibleWidget(
+          icon:
+              'https://developer.foreca.com/static/images/symbols/${hourlyWeather[index].symbol}.png',
+          maxTemp: "${hourlyWeather[index].temperature.toString()}°",
+          time: hourlyWeather[index].time.toString(),
+          verticalPadding: 18.0,
         );
       }),
     );
   }
 
-  Widget _getWeeklyWeather() {
+  Widget _getWeeklyWeather(WeatherModel weatherModel) {
+    final List<DailyForecastModel> weeklyWeather =
+        weatherModel.dailyForecastModel!;
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: Column(
@@ -110,11 +161,12 @@ class HomeScreen extends StatelessWidget {
               ),
               child: Row(
                 children: List.generate(7, (index) {
-                  return const CustomFlexibleWidget(
+                  return CustomFlexibleWidget(
                     icon:
-                        'https://developer.foreca.com/static/images/symbols/d400.png',
-                    temp: '4°',
-                    time: 'Mon',
+                        'https://developer.foreca.com/static/images/symbols/${weeklyWeather[index].symbol}.png',
+                    maxTemp: '${weeklyWeather[index].maxTemp}',
+                    minTemp: '${weeklyWeather[index].minTemp}',
+                    time: weeklyWeather[index].date!,
                     verticalPadding: 18.0,
                   );
                 }),

@@ -4,10 +4,10 @@ part 'location_model.g.dart';
 
 @JsonSerializable()
 class LocationModel {
-  final int id;
-  final String name;
-  final double lon;
-  final double lat;
+  int? id;
+  String? name;
+  double? lon;
+  double? lat;
 
   LocationModel({
     required this.id,
@@ -15,4 +15,9 @@ class LocationModel {
     required this.lon,
     required this.lat,
   });
+
+  factory LocationModel.fromJson(Map<String, dynamic> json) =>
+      _$LocationModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LocationModelToJson(this);
 }

@@ -3,16 +3,21 @@ import 'package:json_annotation/json_annotation.dart';
 part 'daily_weather_model.g.dart';
 
 @JsonSerializable()
-class DailyWeatherModel {
-  final DateTime date;
-  final int maxTemp;
-  final int minTemp;
-  final String symbol;
+class DailyForecastModel {
+  String? date;
+  int? maxTemp;
+  int? minTemp;
+  String? symbol;
 
-  DailyWeatherModel({
+  DailyForecastModel({
     required this.date,
     required this.symbol,
     required this.maxTemp,
     required this.minTemp,
   });
+
+  factory DailyForecastModel.fromJson(Map<String, dynamic> json) =>
+      _$DailyForecastModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DailyForecastModelToJson(this);
 }
