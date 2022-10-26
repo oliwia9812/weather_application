@@ -6,6 +6,8 @@ import 'package:weather/models/daily_weather_model.dart';
 import 'package:weather/models/hourly_weather_model.dart';
 import 'package:weather/models/weather_model.dart';
 import 'package:weather/presentation/home_screen/widgets/custom_toggle_buttons.dart';
+import 'package:weather/presentation/home_screen/widgets/next_week_chart.dart';
+import 'package:weather/presentation/home_screen/widgets/next_week_list.dart';
 import 'package:weather/presentation/search_screen/search_screen.dart';
 import 'package:weather/presentation/widgets/custom_button.dart';
 import 'package:weather/presentation/widgets/custom_flexible_widget.dart';
@@ -20,6 +22,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _showChart = false;
+
   @override
   void initState() {
     BlocProvider.of<WeatherBloc>(context).add(GetWeatherByCurrentLocation());
@@ -72,11 +76,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         CustomButton(
           callback: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: ((context) => const SearchScreen()),
-              ),
-            );
+            Navigator.of(context)
+                .push(
+                  MaterialPageRoute(
+                    builder: ((context) => const SearchScreen()),
+                  ),
+                )
+                .then((_) => setState(() {
+                      _showChart = false;
+                    }));
           },
           icon: Icons.menu_rounded,
         ),
@@ -88,15 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final CurrentWeatherModel currentWeather =
         weatherModel.currentWeatherModel!;
     return Padding(
-      padding: const EdgeInsets.only(top: 46.0, bottom: 46.0),
+      padding: const EdgeInsets.only(top: 46.0, bottom: 36.0),
       child: Column(
         children: [
           Image.network(
             'https://developer.foreca.com/static/images/symbols/${currentWeather.symbol}.png',
-            width: 104.0,
+            width: 70.0,
           ),
           const SizedBox(
-            height: 24.0,
+            height: 16.0,
           ),
           Text(
             '${currentWeather.temperature!}°',
@@ -122,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return CustomFlexibleWidget(
           icon:
               'https://developer.foreca.com/static/images/symbols/${hourlyWeather[index].symbol}.png',
-          maxTemp: "${hourlyWeather[index].temperature.toString()}°",
+          maxTemp: hourlyWeather[index].temperature.toString(),
           time: hourlyWeather[index].time.toString(),
           verticalPadding: 18.0,
         );
@@ -139,40 +147,28 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Next week',
                 style: AppTextStyles.titleMedium,
               ),
-              CustomToggleButtons(),
+              CustomToggleButtons(
+                callback: (changeShowChart) {
+                  setState(() {
+                    _showChart = changeShowChart;
+                  });
+                },
+              ),
             ],
           ),
           const SizedBox(
-            height: 12.0,
+            height: 16.0,
           ),
-          SizedBox(
-            width: double.infinity,
-            height: 135.0,
-            child: Card(
-              color: AppColors.primary,
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Row(
-                children: List.generate(7, (index) {
-                  return CustomFlexibleWidget(
-                    icon:
-                        'https://developer.foreca.com/static/images/symbols/${weeklyWeather[index].symbol}.png',
-                    maxTemp: '${weeklyWeather[index].maxTemp}',
-                    minTemp: '${weeklyWeather[index].minTemp}',
-                    time: weeklyWeather[index].date!,
-                    verticalPadding: 18.0,
-                  );
-                }),
-              ),
-            ),
-          ),
+          if (_showChart) ...[
+            NextWeekChart(data: weeklyWeather),
+          ] else ...[
+            NextWeekList(data: weeklyWeather),
+          ]
         ],
       ),
     );

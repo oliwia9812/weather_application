@@ -8,7 +8,7 @@ import 'package:weather/styles/app_colors.dart';
 import 'package:weather/styles/app_text_styles.dart';
 
 class SearchScreen extends StatelessWidget {
-  SearchScreen({super.key});
+  const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class SearchScreen extends StatelessWidget {
             const Separator(
               height: 16.0,
             ),
-            TextFieldWidget(),
+            const TextFieldWidget(),
             _checkIfCityExist(),
           ],
         ),

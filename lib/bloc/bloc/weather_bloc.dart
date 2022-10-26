@@ -23,6 +23,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     on<GetWeatherBySearch>(_onGetWeatherBySearch);
   }
 
+  List<DailyForecastModel> weatherForecast = [];
   late Position _currentPosition;
 
   Future<void> _onGetWeatherByCurrentLocation(
@@ -101,9 +102,11 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   Future<String?> _getCityName(
       {required double long, required double lat}) async {
-    List<Placemark> placemark = await placemarkFromCoordinates(lat, long);
-
-    return placemark[0].subAdministrativeArea;
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+    Placemark placemark = placemarks[0];
+    return placemark.subAdministrativeArea == ''
+        ? placemark.locality
+        : placemark.subAdministrativeArea;
   }
 
   Future<CurrentWeatherModel?> _getCurrentWeatherData(
@@ -130,9 +133,11 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     if (dailyList != null) {
       for (ForecastDaily dailyForecast in dailyList) {
+        weatherForecast.add(dailyForecast.mapToDailyWeatherModel());
         dailyForecastModelList.add(dailyForecast.mapToDailyWeatherModel());
       }
     }
+
     return dailyForecastModelList;
   }
 

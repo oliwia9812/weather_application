@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:weather/styles/app_colors.dart';
 
+typedef BoolCallback = void Function(bool showChart);
+
 class CustomToggleButtons extends StatefulWidget {
-  const CustomToggleButtons({super.key});
+  final BoolCallback callback;
+  const CustomToggleButtons({required this.callback, super.key});
 
   @override
   State<CustomToggleButtons> createState() => _CustomToggleButtonsState();
@@ -10,6 +13,7 @@ class CustomToggleButtons extends StatefulWidget {
 
 class _CustomToggleButtonsState extends State<CustomToggleButtons> {
   late List<bool> _selections;
+  bool changeShowChart = false;
 
   @override
   void initState() {
@@ -39,13 +43,14 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
 
           switch (index) {
             case 0:
-              print('show chart');
+              changeShowChart = true;
               break;
             case 1:
-              print('show list');
+              changeShowChart = false;
               break;
             default:
           }
+          widget.callback(changeShowChart);
         });
       },
     );

@@ -42,16 +42,16 @@ class CustomFlexibleWidget extends StatelessWidget {
               ),
               Image.network(
                 icon,
-                width: 22.0,
+                width: 24.0,
               ),
               const SizedBox(
                 height: 12.0,
               ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    maxTemp,
+                    "$maxTemp°",
                     style: AppTextStyles.cardTitleMaxTemp,
                   ),
                   if (minTemp != null) ...[
@@ -59,7 +59,7 @@ class CustomFlexibleWidget extends StatelessWidget {
                       width: 4.0,
                     ),
                     Text(
-                      minTemp!,
+                      "${minTemp!}°",
                       style: AppTextStyles.cardTitleMinTemp,
                     ),
                   ]

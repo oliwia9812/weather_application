@@ -18,7 +18,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     return Form(
       key: _formKey,
       child: TextFormField(
-        autofocus: false,
         decoration: InputDecoration(
           prefixIcon: const Icon(
             Icons.search,

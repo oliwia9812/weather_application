@@ -4,8 +4,8 @@ import 'package:weather/styles/app_colors.dart';
 abstract class AppTextStyles {
   static const TextStyle titleXLarge = TextStyle(
     color: AppColors.white,
-    fontSize: 64.0,
-    fontWeight: FontWeight.w500,
+    fontSize: 48.0,
+    fontWeight: FontWeight.w600,
   );
 
   static const TextStyle titleLarge = TextStyle(
@@ -28,19 +28,25 @@ abstract class AppTextStyles {
 
   static const TextStyle cardTitleTime = TextStyle(
     color: AppColors.secondary,
-    fontSize: 14.0,
+    fontSize: 15.0,
     fontWeight: FontWeight.w500,
   );
 
   static const TextStyle cardTitleMaxTemp = TextStyle(
     color: AppColors.white,
     fontSize: 15.0,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
   );
 
   static const TextStyle cardTitleMinTemp = TextStyle(
     color: AppColors.secondary,
     fontSize: 15.0,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle chartTitle = TextStyle(
+    color: AppColors.secondary,
+    fontWeight: FontWeight.w500,
+    fontSize: 15.0,
   );
 }
